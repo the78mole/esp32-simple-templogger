@@ -1,10 +1,16 @@
 # Wiring Diagram for ESP32 Simple Temperature Logger
 
-## Overview
+## Board Compatibility
+This project supports:
+- **FreeNove ESP32-S3 WROOM Clone** (with Camera Connector) - Primary target
+- Standard ESP32-S3-DevKitC-1
+- Other ESP32-S3 variants
+
+## Overview for FreeNove ESP32-S3 WROOM
 ```
                     ┌─────────────────────┐
-                    │   ESP32-S3-WROOM    │
-                    │                     │
+                    │ FreeNove ESP32-S3   │
+                    │   WROOM Clone       │
                     │                     │
  DS18B20 Sensors    │  GPIO 4 ◄───────────┼─── OneWire Data (with 4.7kΩ pullup to 3.3V)
                     │                     │
@@ -12,10 +18,12 @@
     │               │                     │
     │       ┌───────┤  GND                │
     │       │       │                     │
-    │       │       │  GPIO 10 ───────────┼─── SD Card CS (if using SPI)
+    │       │       │                     │ SD Card SDMMC Interface (FreeNove):
+    │       │       │  GPIO 38 ───────────┼─── SD Card CMD (Command)
+    │       │       │  GPIO 39 ───────────┼─── SD Card CLK (Clock)
+    │       │       │  GPIO 40 ───────────┼─── SD Card DATA (D0)
     │       │       │                     │
-    │       │       │  [SD Card Slot]     │
-    │       │       │                     │
+    │       │       │ [Camera Connector]  │
     │       │       └─────────────────────┘
     │       │
     │       │
@@ -32,6 +40,19 @@
                 │
                 └─── OneWire Data Line (all connected in parallel)
 ```
+
+## FreeNove ESP32-S3 WROOM SD Card SDMMC Pins
+The firmware uses the SDMMC interface (not SPI) with these pins:
+
+- **CMD (Command)**: GPIO 38
+- **CLK (Clock)**: GPIO 39  
+- **DATA0**: GPIO 40
+
+**Important Notes for FreeNove SDMMC:**
+- This board uses SDMMC interface, not SPI
+- Much faster than SPI interface
+- Supports both 1-bit and 4-bit modes
+- The firmware automatically detects the best mode and frequency
 
 ## DS18B20 Pinout (TO-92 Package)
 ```
